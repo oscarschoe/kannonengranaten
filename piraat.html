@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Scorekaart</title>
+	<script>
+		function addRow() {
+			var table = document.getElementById("scoreTable");
+			var rowCount = table.rows.length;
+			var row = table.insertRow(rowCount);
+			var cell1 = row.insertCell(0);
+			var cell2 = row.insertCell(1);
+			var cell3 = row.insertCell(2);
+			var cell4 = row.insertCell(3);
+			cell1.innerHTML = "<input type='text' name='name[]'>";
+			cell2.innerHTML = "<input type='number' name='score1[]' onchange='updateTotal(this)'>";
+			cell3.innerHTML = "<input type='number' name='score2[]' onchange='updateTotal(this)'>";
+			cell4.innerHTML = "<span class='total'>0</span>";
+		}
+		
+		function updateTotal(element) {
+			var row = element.parentNode.parentNode;
+			var score1 = parseInt(row.cells[1].querySelector('input').value);
+			var score2 = parseInt(row.cells[2].querySelector('input').value);
+			if (isNaN(score1)) {
+				score1 = 0;
+			}
+			if (isNaN(score2)) {
+				score2 = 0;
+			}
+			var total = score1 + score2;
+			row.cells[3].querySelector('.total').textContent = total;
+			updateWinner();
+		}
+		
+		function updateWinner() {
+			var table = document.getElementById("scoreTable");
+			var rows = table.rows;
+			var winnerRow = null;
+			var winnerTotal = 0;
+			for (var i = 1; i < rows.length; i++) {
+				var total = parseInt(rows[i].cells[3].querySelector('.total').textContent);
+				if (total >= 6000 && total > winnerTotal) {
+					winnerRow = rows[i];
+					winnerTotal = total;
+				}
+			}
+			if (winnerRow != null) {
+				alert(winnerRow.cells[0].querySelector('input').value + " heeft gewonnen met " + winnerTotal + " punten!");
+			}
+		}
+	</script>
+	<style>
+		table, th, td {
+			border: 1px solid black;
+			border-collapse: collapse;
+			padding: 5px;
+			text-align: center;
+		}
+		th {
+			background-color: lightgray;
+		}
+		input[type="number"] {
+			width: 60px;
+			text-align: center;
+		}
+		.total {
+			font-weight: bold;
+		}
+	</style>
+</head>
+<body>
+	<h1>Scorekaart</h1>
+	<table id="scoreTable">
+		<tr>
+			<th>Speler</th>
+			<th>Score 1</th>
+			<th>Score 2</th>
+			<th>Totaal</th>
+		</tr>
+		<tr>
+			<td><input type='text' name='name[]'></td>
+			<td><input type='number' name='score1[]' onchange='updateTotal(this)'></td>
+			<td><input type='number' name='score2[]' onchange='updateTotal(this)'></td>
+			<td><span class='total'>0</span></td>
+		</tr>
+	</table>
+	<br>
+	<button onclick="addRow()">Voeg speler toe</button>
+</body
